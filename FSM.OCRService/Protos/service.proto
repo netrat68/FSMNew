@@ -1,0 +1,49 @@
+syntax = "proto3";
+option csharp_namespace = "FSM.OCRService";
+
+import "google/protobuf/timestamp.proto";
+
+package fsm_id_card_reader;
+
+service IdCardReader {
+    rpc ReadIdCard(IdCardReadRequest) returns (IdCardReadReply) {}
+}
+
+message IdCardDetails {
+    google.protobuf.Timestamp date_of_birth = 1;
+    google.protobuf.Timestamp date_of_issue = 2;
+    google.protobuf.Timestamp date_of_expiry = 3;
+    string given_name = 4;
+    string surname = 5;
+    string document_number = 6;
+    IdCardType document_type = 7;
+    string recognized_type = 8;
+}
+
+// enum Sex {
+//     SEX_UNSPECIFIED = 0;
+//     SEX_FEMALE = 1;
+//     SEX_MALE = 2;
+// }
+
+
+enum IdCardType {
+    ID_CARD_TYPE_UNKNOWN = 0;
+    ID_CARD_TYPE_PASSPORT = 1;
+    ID_CARD_TYPE_NATIONAL_ID = 2;
+    ID_CARD_TYPE_DRIVER_LICENSE = 3;
+}
+
+
+message IdCardReadRequest {
+    IdCardType type = 1;
+    oneof image_source {
+        bytes image_data = 2;
+        string storage_path = 3;
+    }
+}
+
+message IdCardReadReply {
+    IdCardDetails details = 1;
+    bool Success = 2;
+}
